@@ -157,10 +157,16 @@ deserialize_context(SerializedPageContext) ->
     OldStateHandler = wf_context:handler(state_handler),
 
     % Deserialize page_context and handler_list if available...
-    [PageContext, NewStateHandler] = case SerializedPageContext of
-        undefined -> [wf_context:page_context(), OldStateHandler];
-        Other -> wf_pickle:depickle(Other)
-    end,
+    [PageContext, NewStateHandler] =
+	case SerializedPageContext of
+	    undefined ->
+		[wf_context:page_context(), OldStateHandler];
+	    Other ->
+		case wf_pickle:depickle(Other) of
+		    [PC, NSH] = Result -> Result;
+		    _ -> [wf_context:page_context(), OldStateHandler]
+		end
+	end,
 
     wf_context:page_context(PageContext),
     wf_context:restore_handler(NewStateHandler),
