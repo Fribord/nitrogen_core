@@ -163,7 +163,7 @@ deserialize_context(SerializedPageContext) ->
 		[wf_context:page_context(), OldStateHandler];
 	    Other ->
 		case wf_pickle:depickle(Other) of
-		    [PC, NSH] = Result -> Result;
+		    [_PC, _NSH] = Result -> Result;
 		    _ -> [wf_context:page_context(), OldStateHandler]
 		end
 	end,
